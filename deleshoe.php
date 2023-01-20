@@ -1,3 +1,8 @@
+<?php
+include ("database/connexion.inc.php");
+include ("database/prepare_query.inc.php");
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
