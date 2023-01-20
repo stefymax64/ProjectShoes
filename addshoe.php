@@ -1,26 +1,57 @@
 <?php 
+// 5_Créer la réception des données du formulaire
 include ("database/connexion.inc.php");
 include ("database/prepare_query.inc.php");
 
-if(isset($_POST["form_name"]) && !empty($_POST["form_name"])
-    && isset($_POST["form_price"]) && !empty($_POST["form_price"])){
+//Mon code
+// if(isset($_POST["form_name"]) && !empty($_POST["form_name"])
+//     && isset($_POST["form_price"]) && !empty($_POST["form_price"])){
         
-        //Appel la connexion à la BDD
+//         //Appel la connexion à la BDD
+//         $form_name = $_POST["form_name"];
+//         $form_price = $_POST["form_price"];
+
+//         //Connexion à la BDD
+//         $mysqli = db_connect();
+
+//         if(insert_shoe($mysqli, $form_name, $form_price,$error)){
+//             $form_message = "La chaussure a bien été crée.";
+//         }
+//         else{
+//             $form_message = $error;
+//         }
+// }
+
+if(isset($_POST["form_name"]) && isset($_POST["form_price"])    // Variables exisent ?
+     && !empty($_POST["form_name"]) && !empty($_POST["form_price"]) // Champs remplis ?
+    ){
+        //APPEL BDD
         $form_name = $_POST["form_name"];
         $form_price = $_POST["form_price"];
+        if(is_numeric($form_price)){
+            $mysqli = db_connect();            
+            if($mysqli->connect_error == null){
+                $error = "";
+                if(insert_shoe($mysqli,$form_name,$form_price,$error)){
+                    $form_message = "La chaussure à été crée !";
+                }
+                else{
+                    $form_message = $error;
+                }
+            }
+            else{
+                $form_message = "Erreur database connexion";
+            }
 
-        //Connexion à la BDD
-        $mysqli = db_connect();
-
-        if(insert_shoe($mysqli, $form_name, $form_price,$error)){
-            $form_message = "La chaussure a bien été crée.";
         }
         else{
-            $form_message = $error;
+            $form_message = "Le prix doit être un nombre.";
         }
-}
+        
+    }
 ?>
 
+<!-- 2_Créer le formulaire d'ajout d'un article -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -39,7 +70,7 @@ if(isset($_POST["form_name"]) && !empty($_POST["form_name"])
             <input type="number" name="form_price" id="form_price" step="0.01" placeholder="0.00€" required>
             <input type="submit" value="Envoyer">
         </form>
-
+        <!-- Ajout du message -->
         <p> <?= isset($form_message)?$form_message:null ?> </p>
 </body>
 </html>
